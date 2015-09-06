@@ -1,0 +1,66 @@
+{
+  "variables": {
+    "headless": "false",
+    "disk_size": "16384",
+    "version": ""
+  },
+  "builders": [
+    {
+      "name": "jessie81",
+      "vm_name": "jessie81",
+      "vmdk_name": "jessie81-disk0",
+      "type": "vmware-iso",
+      "headless": "{{user `headless`}}",
+      "disk_size": "{{user `disk_size`}}",
+      "guest_os_type": "other3xlinux-64",
+      "iso_url": "/Users/Shared/ISOs/debian-8.1.0-amd64-DVD-1.iso",
+      "iso_checksum": "018ac2307ca33f021ee33ac9e26f05c7a47eb0e2",
+      "iso_checksum_type": "sha1",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_wait_timeout": "60m",
+      "shutdown_command": "sudo poweroff",
+      "http_directory": ".",
+      "tools_upload_flavor": "linux",
+      "boot_command": [
+        "<esc><wait>",
+        "auto ",
+        "preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/scripts/debian-preseed.cfg ",
+        "<enter>"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "files/vagrant",
+      "destination": "/home/vagrant/vagrant"
+    },
+    {
+      "type": "file",
+      "source": "files/vagrant.pub",
+      "destination": "/home/vagrant/authorized_keys"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+      "script": "scripts/vagrant-config.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+      "script": "scripts/ubuntu-vmware-tools_install.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+      "script": "scripts/cleanup.sh"
+    }
+  ],
+  "post-processors": [
+    {
+    "type": "vagrant",
+    "output": "{{.BuildName}}-{{.Provider}}.box"
+    }
+  ]
+}
