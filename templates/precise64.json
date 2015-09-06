@@ -1,0 +1,69 @@
+{
+  "variables": {
+    "version": ""
+  },
+  "builders": [
+    {
+      "name": "precise64",
+      "vm_name": "precise64",
+      "vmdk_name": "precise64-disk0",
+      "type": "vmware-iso",
+      "headless": true,
+      "disk_size": 16384,
+      "guest_os_type": "ubuntu-64",
+      "iso_url": "/Users/Shared/ISOs/ubuntu-12.04.4-server-amd64.iso",
+      "iso_checksum": "b802bb065df98c0530d782eb94778c2da19e10d6",
+      "iso_checksum_type": "sha1",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_wait_timeout": "60m",
+      "shutdown_command": "echo 'vagrant' | sudo -S shutdown -P now",
+      "http_directory": ".",
+      "tools_upload_flavor": "linux",
+      "boot_command": [
+        "<esc><esc><enter><wait>",
+        "/install/vmlinuz noapic ",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/scripts/ubuntu-preseed.cfg ",
+        "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+        "hostname=precise64 ",
+        "fb=false debconf/frontend=noninteractive ",
+        "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
+        "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
+        "initrd=/install/initrd.gz -- <enter>"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "files/vagrant",
+      "destination": "/home/vagrant/vagrant"
+    },
+    {
+      "type": "file",
+      "source": "files/vagrant.pub",
+      "destination": "/home/vagrant/authorized_keys"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+      "script": "scripts/vagrant-config.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+      "script": "scripts/ubuntu-vmware-tools_install.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+      "script": "scripts/cleanup.sh"
+    }
+  ],
+ "post-processors": [
+   {
+     "type": "vagrant",
+     "output": "output/{{.BuildName}}-{{.Provider}}.box"
+   }
+ ]
+}

@@ -1,0 +1,71 @@
+{
+  "variables": {
+    "headless": "true",
+    "disk_size": "16384",
+    "version": ""
+  },
+  "builders": [
+    {
+      "name": "trusty64",
+      "vm_name": "trusty64",
+      "vmdk_name": "trusty64-disk0",
+      "type": "vmware-iso",
+      "headless": "{{user `headless`}}",
+      "disk_size": "{{user `disk_size`}}",
+      "guest_os_type": "ubuntu-64",
+      "iso_url": "/Users/Shared/ISOs/ubuntu-14.04.2-server-amd64.iso",
+      "iso_checksum": "3bfa6eac84d527380d0cc52db9092cde127f161e",
+      "iso_checksum_type": "sha1",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_wait_timeout": "60m",
+      "shutdown_command": "echo 'vagrant' | sudo -S shutdown -P now",
+      "http_directory": ".",
+      "tools_upload_flavor": "linux",
+      "boot_command": [
+        "<esc><esc><enter><wait>",
+        "/install/vmlinuz noapic ",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/scripts/ubuntu-preseed.cfg ",
+        "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+        "hostname=trusty64 ",
+        "fb=false debconf/frontend=noninteractive ",
+        "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
+        "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
+        "initrd=/install/initrd.gz -- <enter>"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "files/vagrant",
+      "destination": "/home/vagrant/vagrant"
+    },
+    {
+      "type": "file",
+      "source": "files/vagrant.pub",
+      "destination": "/home/vagrant/authorized_keys"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+      "script": "scripts/vagrant-config.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+      "script": "scripts/ubuntu-vmware-tools_install.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+      "script": "scripts/cleanup.sh"
+    }
+  ],
+ "post-processors": [
+   {
+     "type": "vagrant",
+     "output": "output/{{.BuildName}}-{{.Provider}}.box"
+   }
+ ]
+}
