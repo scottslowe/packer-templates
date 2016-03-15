@@ -1,4 +1,6 @@
 #!/bin/sh -x
+
+# Clean up DHCP leases
 echo "Cleaning up dhcp leases..."
 rm /var/lib/dhcp/*
 
@@ -23,6 +25,10 @@ rm -rf /root/.rbenv/.git
 #apt-get -y remove linux-headers-$(uname -r)
 #echo "Running remove older kernel headers"
 #dpkg -l 'linux-*' | sed '/^ii/!d;/'"$(uname -r | sed "s/\(.*\)-\([^0-9]\+\)/\1/")"'/d;s/^[^ ]* [^ ]* \([^ ]*\).*/\1/;/[0-9]/!d' | xargs sudo apt-get -y purge
+# Clean up unnecessary packages
+echo "Removing unnecessary packages..."
+apt-get -y purge libx11-data xauth libxcb1 libx11-6 libxext6
+apt-get -y purge ppp pppconfig pppoeconf popularity-contest
 echo "Running apt-get clean..."
 apt-get -y clean
 echo "Running apt-get autoclean..."
