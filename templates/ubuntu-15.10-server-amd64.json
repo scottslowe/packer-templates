@@ -3,9 +3,10 @@
     {
       "type": "vmware-iso",
       "boot_command": [
-        "<esc><wait>",
-        "<esc><wait>",
-        "<enter><wait>",
+        "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
         "/install/vmlinuz<wait>",
         " auto<wait>",
         " console-setup/ask_detect=false<wait>",
@@ -21,6 +22,7 @@
         " locale=en_US<wait>",
         " netcfg/get_domain=vm<wait>",
         " netcfg/get_hostname=vagrant<wait>",
+        " grub-installer/bootdev=/dev/sda<wait>",
         " noapic<wait>",
         " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{ user `preseed_path` }}<wait>",
         " -- <wait>",
@@ -50,12 +52,12 @@
       }
     }
   ],
- "post-processors": [
-   {
-     "output": "output/{{ .BuildName }}-{{ .Provider }}.box",
-     "type": "vagrant"
-   }
- ],
+  "post-processors": [
+    {
+      "output": "output/{{ .BuildName }}-{{ .Provider }}.box",
+      "type": "vagrant"
+    }
+  ],
   "provisioners": [
     {
       "type": "file",
@@ -72,7 +74,9 @@
       "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
       "scripts": [
         "scripts/vagrant-config.sh",
+        "scripts/sudoers.sh",
         "scripts/ubuntu-vmware-tools_install.sh",
+        "scripts/networking.sh",
         "scripts/cleanup.sh"
       ]
     }
@@ -80,12 +84,12 @@
   "variables": {
     "disk_size": "16384",
     "headless": "",
-    "iso_checksum": "a3b345908a826e262f4ea1afeb357fd09ec0558cf34e6c9112cead4bb55ccdfb",
+    "iso_checksum": "86aa35a986eba6e5ad30e3d486d57efe6803ae7ea4859b0216953e9e62871131",
     "iso_checksum_type": "sha256",
-    "iso_name": "ubuntu-14.04.3-server-amd64.iso",
+    "iso_name": "ubuntu-15.10-server-amd64.iso",
     "iso_path": "/Users/Shared/ISOs",
     "preseed_path": "scripts/ubuntu-preseed.cfg",
-    "template": "ubuntu-14.04.3-amd64",
+    "template": "ubuntu-15.10-amd64",
     "version": ""
   }
 }

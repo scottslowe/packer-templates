@@ -80,12 +80,12 @@
   "variables": {
     "disk_size": "16384",
     "headless": "",
-    "iso_checksum": "a3b345908a826e262f4ea1afeb357fd09ec0558cf34e6c9112cead4bb55ccdfb",
+    "iso_checksum": "07e4bb5569814eab41fafac882ba127893e3ff0bdb7ec931c9b2d040e3e94e7a",
     "iso_checksum_type": "sha256",
-    "iso_name": "ubuntu-14.04.3-server-amd64.iso",
+    "iso_name": "ubuntu-14.04.4-server-amd64.iso",
     "iso_path": "/Users/Shared/ISOs",
     "preseed_path": "scripts/ubuntu-preseed.cfg",
-    "template": "ubuntu-14.04.3-amd64",
+    "template": "ubuntu-14.04.4-amd64",
     "version": ""
   }
 }

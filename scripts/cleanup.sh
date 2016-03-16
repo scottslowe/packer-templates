@@ -4,12 +4,6 @@
 echo "Cleaning up dhcp leases..."
 rm /var/lib/dhcp/*
 
-#echo "Cleaning up udev rules..."
-#rm /etc/udev/rules.d/70-persistent-net.rules
-#mkdir /etc/udev/rules.d/70-persistent-net.rules
-#rm -rf /dev/.udev/
-#rm /lib/udev/rules.d/75-persistent-net-generator.rules
-
 #Remove oh-my-zsh git repo histories to save space; keep the current code checkout. We want oh-my-zsh but not the whole git repo's history
 echo "Removing oh-my-zsh git repos..."
 rm -rf /home/vagrant/.oh-my-zsh/.git
