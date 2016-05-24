@@ -23,7 +23,7 @@
       "boot_command": [
         "<esc><esc><enter><wait>",
         "/install/vmlinuz noapic ",
-        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/scripts/ubuntu-preseed.cfg ",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed/ubuntu-1204-preseed.cfg ",
         "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
         "hostname=precise64 ",
         "fb=false debconf/frontend=noninteractive ",
