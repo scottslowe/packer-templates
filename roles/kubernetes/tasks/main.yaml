@@ -1,0 +1,32 @@
+---
+- name: "Download specified version of kubectl"
+  get_url:
+    url: "https://storage.googleapis.com/kubernetes-release/release/v{{ kube_ver }}/bin/linux/amd64/kubectl"
+    dest: "/usr/local/bin/kubectl"
+    owner: "root"
+    group: "root"
+    mode: 0755
+  tags:
+    - kubernetes
+
+- name: "Download specified version of clusterawsadm"
+  get_url:
+    url: "https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/download/v{{ clusterawsadm_ver }}/clusterawsadm-linux-amd64"
+    dest: "/usr/local/bin/clusterawsadm"
+    owner: "root"
+    group: "root"
+    mode: 0755
+  tags:
+    - kubernetes
+    - cluster-api
+
+- name: "Download specified version of clusterctl"
+  get_url:
+    url: "https://github.com/kubernetes-sigs/cluster-api/releases/download/v{{ clusterctl_ver }}/clusterctl-linux-amd64"
+    dest: "/usr/local/bin/clusterctl"
+    owner: "root"
+    group: "root"
+    mode: 0755
+  tags:
+    - kubernetes
+    - cluster-api

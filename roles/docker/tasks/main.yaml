@@ -1,0 +1,34 @@
+---
+- name: "Add signing key for Docker repository (Debian/Ubuntu)"
+  apt_key:
+    url: "https://download.docker.com/linux/ubuntu/gpg"
+    state: "present"
+  register: "apt_key_result"
+  when: ansible_facts['os_family'] == "Debian"
+  tags:
+    - docker
+
+- name: "Add Docker repository (Debian/Ubuntu)"
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+    state: "present"
+  register: "apt_repo_result"
+  when: ansible_facts['os_family'] == "Debian"
+  tags:
+    - docker
+
+- name: "Update the apt cache if repository/key configuration changed"
+  apt:
+    update_cache: yes
+  when: "(apt_key_result is changed) or (apt_repo_result is changed)"
+  tags:
+    - docker
+
+- name: "Install Docker-related packages (Debian/Ubuntu)"
+  apt:
+    name: "{{ package_list }}"
+    update_cache: yes
+    cache_valid_time: "{{ apt_cache_valid_time }}"
+  when: ansible_facts['os_family'] == "Debian"
+  tags:
+    - docker
