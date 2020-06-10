@@ -1,0 +1,56 @@
+{
+    "variables": {
+        "aws_access_key": "",
+        "aws_secret_key": "",
+        "aws_region": "",
+        "aws_profile": ""
+    },
+    "builders": [{
+        "name": "ubuntu-capi-bootstrapper-1.18.2",
+        "ami_name": "ubuntu-capi-bootstrapper-1.18.2",
+        "type": "amazon-ebs",
+        "instance_type": "t3.small",
+        "source_ami_filter": {
+            "filters": {
+                "virtualization-type": "hvm",
+                "name": "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
+                "root-device-type": "ebs",
+                "architecture": "x86_64"
+            },
+            "owners": ["099720109477"],
+            "most_recent": true
+        },
+        "access_key": "{{ user `aws_access_key` }}",
+        "profile": "{{ user `aws_profile` }}",
+        "region": "{{ user `aws_region` }}",
+        "secret_key": "{{ user `aws_secret_key` }}",
+        "ssh_username": "ubuntu",
+        "tags": {
+            "distribution": "ubuntu",
+            "distribution_release": "bionic",
+            "distribution_version": "18.04",
+            "capi_version": "0.3.5",
+            "capa_version": "0.5.4",
+            "kubernetes_version": "1.18.2",
+            "build_date": "{{ isotime }}"
+        }
+    }],
+    "provisioners": [{
+        "type": "shell",
+        "inline": [
+            "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'Waiting for cloud-init...'; sleep 1; done",
+            "sudo apt-get -qq update && sudo DEBIAN_FRONTEND=noninteractive apt-get -qqy install python python-pip"
+        ],
+        "only": [
+            "ubuntu-capi-bootstrapper-1.18.2"
+        ]
+    },
+    {
+        "type": "ansible",
+        "playbook_file": "./playbooks/build-ubuntu-bootstrapper.yaml",
+        "ansible_env_vars": [
+            "ANSIBLE_SSH_ARGS='-o IdentitiesOnly=yes'",
+            "ANSIBLE_REMOTE_TEMP='/tmp/.ansible'"
+        ]
+    }]
+}

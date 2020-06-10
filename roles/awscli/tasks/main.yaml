@@ -1,0 +1,8 @@
+---
+- name: "Install specified version of AWS CLI"
+  pip:
+    name: "awscli"
+    version: "{{ awscli_ver }}"
+  become: yes
+  tags:
+    - aws

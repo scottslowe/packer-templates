@@ -1,0 +1,11 @@
+---
+- name: "Download specified version of kind"
+  get_url:
+    url: "https://github.com/kubernetes-sigs/kind/releases/download/v{{ kind_ver }}/kind-linux-amd64"
+    dest: "/usr/local/bin/kind"
+    owner: "root"
+    group: "root"
+    mode: 0755
+  tags:
+    - kubernetes
+    - kind
